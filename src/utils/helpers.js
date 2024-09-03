@@ -1,6 +1,15 @@
 import sunriseAndSunsetData from "./sunrise-sunset.json";
 
+/* 
+  在這個文件中，export了三個物件：
+  第一個：getMoment()是一個函數，可以根據給定的縣市區域來回傳當下時刻當地為白天還是夜晚，判斷依據是根據給定的日出日落資料。
+  第二個：availableLocations是一個array of objects，每一個物件有三項屬性：縣市名稱、測站名稱及日出城市名稱（目前與縣市名稱相同，但根據中央氣象局更動有可能會有不同）。
+  第三個：findLocation()是一個函數，根據給定的縣市名稱從availableLocations找出相應的object。
+*/
+
 export const getMoment = (locationName) => {
+  // location是從sunrise-sunset.json抓到的資料，是一個物件，包含兩個屬性：
+  // locationName：縣市名稱 以及 time: 為一個array of object，每個物件包含當天日期以及日出日落時刻
   const location = sunriseAndSunsetData.find(
     (data) => data.locationName === locationName
   );
@@ -10,6 +19,7 @@ export const getMoment = (locationName) => {
   }
 
   const now = new Date();
+  // nowDate資料型態： 2024-09-03
   const nowDate = Intl.DateTimeFormat("zh-TW", {
     year: "numeric",
     month: "2-digit",
@@ -18,12 +28,14 @@ export const getMoment = (locationName) => {
     .format(now)
     .replace(/\//g, "-");
 
-  const locationDate = location?.time.find((time) => time.dataTime === nowDate);
+  // locationDate即為使用者當下的日期的time屬性物件，包含當日日期及日出日落資料。
+  const locationDate = location.time.find((time) => time.dataTime === nowDate);
 
   if (!locationDate) {
     throw new Error(`找不到 ${locationName} 在 ${nowDate} 的日出日落資料`);
   }
 
+  // 此三個變數紀錄當天日出、日落及使用者當下三個時刻距離1970-01-01的毫秒數。
   const sunriseTimestamp = new Date(
     `${locationDate.dataTime} ${locationDate.sunrise}`
   ).getTime();
@@ -32,6 +44,7 @@ export const getMoment = (locationName) => {
   ).getTime();
   const nowTimeStamp = now.getTime();
 
+  // 透過比較三者的大小，判斷當下屬於夜晚還是白天，回傳"day"或"night"供App.js使用來決定要用淺色模式還是深色模式。
   return sunriseTimestamp <= nowTimeStamp && nowTimeStamp <= sunsetTimestamp
     ? "day"
     : "night";

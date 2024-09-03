@@ -8,6 +8,23 @@ import { ReactComponent as RefreshIcon } from "../images/refresh.svg";
 import { ReactComponent as LoadingIcon } from "../images/loading.svg";
 import { ReactComponent as CogIcon } from "../images/cog.svg";
 
+/* 
+  此文件定義了本專案的第一個畫面－天氣卡:
+  首先透過styled定義了各個元件的CSS屬性:
+    1. WeatherCardWrapper為整個天氣卡的外包裝（基底）
+    2. Cog為天氣卡右上角的齒輪圖案
+    3. Location為左上角顯示的縣市名稱
+    4. Description為縣市名稱下顯示的天氣狀況及舒適度
+    5. CurrentWeather為中間區塊，分為左右兩區，左側為溫度顯示，右側為天氣狀況圖示，使用flexbox排成左右方向，包含三個元件：
+        a. Temperature為溫度字樣
+        b. Celsius為攝氏度字樣
+        c. WeatherIcon為天氣狀況圖示
+    6. AirFlow為風速圖示及實際數字
+    7. Rain為降雨機率圖示及實際數字
+    8. Refresh為右下角的重新整理按鈕，額外設計了抓取資料時會不斷旋轉的功能，提醒使用者資料正在抓取中。
+  主函式定義各元件的排版方式，並根據從App.js傳來的props再傳遞給styled components來顯示畫面的數據。
+*/
+
 const WeatherCardWrapper = styled.div`
   position: relative;
   min-width: 360px;
@@ -159,14 +176,17 @@ const WeatherCard = ({
           <RainIcon /> {rainPossibility}
         </Rain>
         <Refresh onClick={fetchData} isLoading={isLoading}>
-          {/*使用瀏覽器原生Intl方法將時間改成中文顯示，
+          {/*
+            使用瀏覽器原生Intl方法將時間改成中文顯示，
             Intl.DataTimeFormat(<地區>, <設定>)中，第一個參數放中文"zh-TW"，第二個我們希望以數字顯示時和分就好。
-            最後透過.format(<時間>)將時間帶入即可。*/}
+            最後透過.format(<時間>)將時間帶入即可。
+        */}
           最後觀察時間：
           {new Intl.DateTimeFormat("zh-TW", {
             hour: "numeric",
             minute: "numeric",
           }).format(dayjs(observationTime))}{" "}
+          {/* 若目前正在載入中，則使用LoadingIcon，否則使用RefreshIcon。 */}
           {isLoading ? <LoadingIcon /> : <RefreshIcon />}
         </Refresh>
       </WeatherCardWrapper>

@@ -41,7 +41,7 @@ const Container = styled.div`
 function App() {
   // 從localStorage取出之前儲存的地區，若沒有則預設臺北市
   // Lazy Initialization: 在useState帶入函式，該函式的回傳值是state的初始值
-  // 而且這個韓式只有在元件初次載入時才會執行
+  // 而且這個函式只有在元件初次載入時才會執行
   const [currentCity, setCurrentCity] = useState(
     () => localStorage.getItem("cityName") || "臺北市"
   );
@@ -62,7 +62,6 @@ function App() {
   );
   const { cityName, locationName, sunriseCityName } = currentLocation;
 
-  // TODO: 等使用者可以修改地區時要修改裡面的參數，先將dependencies array 設為空
   const moment = useMemo(() => getMoment(sunriseCityName), [sunriseCityName]);
   const [weatherElement, fetchData] = useWeatherAPI({
     locationName,

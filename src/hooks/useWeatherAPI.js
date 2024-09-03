@@ -8,7 +8,7 @@ const fetchCurrentWeather = async ({ authorizationKey, locationName }) => {
     );
     const data = await response.json();
     const stationData = data.records.Station[0];
-    console.log(stationData);
+    // console.log(stationData);
     const weatherElements = {
       WDSD: stationData.WeatherElement.WindSpeed,
       TEMP: stationData.WeatherElement.AirTemperature,
