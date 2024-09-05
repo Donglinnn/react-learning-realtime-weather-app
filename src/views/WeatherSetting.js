@@ -2,6 +2,17 @@ import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { availableLocations } from "../utils/helpers";
 
+/* 
+  此文件定義了本專案的第二個畫面－地區設定:
+  首先透過styled定義了各個元件的CSS屬性:
+    1. WeatherSettingWrapper為整個地區設定畫面的外包裝（基底）
+    2. Title為畫面左上角的「設定」文字
+    3. StyledLabel為中間選單的label，顯示地區兩字
+    4. StyledSelect為讓使用者選擇縣市地區的選單
+    5. ButtonGroup為畫面左下及右下兩個按鈕的
+  主函式定義各元件的排版方式，並根據從App.js傳來的props再傳遞給styled components來顯示畫面的數據。
+*/
+
 const WeatherSettingWrapper = styled.div`
   position: relative;
   min-width: 360px;
@@ -47,6 +58,7 @@ const ButtonGroup = styled.div`
   justify-content: space-between;
   align-items: center;
 
+  // > 符號會選取該元素直接的子元素，即Back與Save兩個按鈕。
   > button {
     display: flex;
     align-items: center;
@@ -66,8 +78,7 @@ const ButtonGroup = styled.div`
     border-radius: 5px;
     font-size: 14px;
 
-    &:focus,
-    &.focus {
+    &:focus {
       outline: 0;
       box-shadow: none;
     }
@@ -93,6 +104,7 @@ const Save = styled.button`
   }
 `;
 
+// 從App.js傳入縣市名稱與兩個函式
 const WeatherSetting = ({
   cityName,
   handleCurrentCityChange,
@@ -101,14 +113,17 @@ const WeatherSetting = ({
   // 為避免與window.location物件混淆，取作locationName
   const [locationName, setLocationName] = useState(cityName);
 
+  // 取得使用者選定的縣市，並更新locationName的state
   const handleChange = (e) => {
     setLocationName(e.target.value);
   };
 
   const handleSave = () => {
-    // console.log("locationName", locationName);
+    // 將設定的縣市存入localStorage
     localStorage.setItem("cityName", locationName);
+    // 將App.js的currentCity設為選定的縣市
     handleCurrentCityChange(locationName);
+    // 將畫面換成天氣卡的頁面
     handleCurrentPageChange("WeatherCard");
   };
 
@@ -123,6 +138,7 @@ const WeatherSetting = ({
         onChange={handleChange}
         value={locationName}
       >
+        {/* 使用array的map方法製造出根據availableLocations陣列的cityName的選項們 */}
         {availableLocations.map(({ cityName }) => {
           return (
             <option value={cityName} key={cityName}>

@@ -20,7 +20,7 @@ export const getMoment = (locationName) => {
 
   const now = new Date();
   // nowDate資料型態： 2024-09-03
-  const nowDate = Intl.DateTimeFormat("zh-TW", {
+  const nowDate = new Intl.DateTimeFormat("zh-TW", {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
